@@ -20,6 +20,7 @@ namespace StudyPlanner.Deadlines
             var today = (now ?? DateTime.Today).Date;
             if (item.Deadline.Date < today)
                 return DeadlineStatus.Overdue;
+            // Порог ближайших дедлайнов (Курапов): подтверждено 3 дня по ПР3
             if ((item.Deadline.Date - today).TotalDays <= 3)
                 return DeadlineStatus.Upcoming;
             return DeadlineStatus.Normal;
