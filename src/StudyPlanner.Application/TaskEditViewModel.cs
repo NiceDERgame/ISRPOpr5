@@ -27,8 +27,12 @@ namespace StudyPlanner.Application
                 errors.Add("Дисциплина должна быть выбрана.");
             if (Title.Trim().Length > 120)
                 errors.Add("Название не должно превышать 120 символов.");
+            if (!IsDoneAllowedInPast && Deadline.Date < DateTime.Today)
+                errors.Add("Срок нового задания не может быть в прошлом.");
             return errors;
         }
+
+        public bool IsDoneAllowedInPast { get; set; }
 
         public AssignmentItem ToItem() => new(
             Title.Trim(), CourseName.Trim(), Deadline, Priority, Description.Trim());
