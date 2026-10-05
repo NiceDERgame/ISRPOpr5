@@ -101,4 +101,27 @@ namespace StudyPlanner.Tests
             Assert.NotEmpty(edit.Validate());
         }
     }
+
+    public class StorageBackupTests
+    {
+        [Fact]
+        public void Save_Twice_CreatesBak()
+        {
+            var storage = new JsonStorageService();
+            var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".json");
+            storage.Save(path, new StudyData());
+            storage.Save(path, new StudyData());
+            Assert.True(File.Exists(path + ".bak"));
+        }
+
+        [Fact]
+        public void BuildSummary_CountsDone()
+        {
+            var data = new StudyData();
+            data.Assignments.Add(new AssignmentItem("A", "C", DateTime.Today));
+            data.Assignments.Add(new AssignmentItem("B", "C", DateTime.Today) { IsDone = true });
+            Assert.Equal("Всего: 2 | Выполнено: 1 | Активно: 1",
+                JsonStorageService.BuildSummary(data));
+        }
+    }
 }

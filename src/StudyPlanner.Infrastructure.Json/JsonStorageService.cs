@@ -25,8 +25,20 @@ namespace StudyPlanner.Infrastructure.Json
             var dir = Path.GetDirectoryName(path);
             if (!string.IsNullOrEmpty(dir))
                 Directory.CreateDirectory(dir);
+            if (File.Exists(path))
+                File.Copy(path, path + ".bak", overwrite: true);
             var json = JsonSerializer.Serialize(data, Options);
             File.WriteAllText(path, json);
+        }
+
+        public static string BuildSummary(StudyData data)
+        {
+            int total = data.Assignments.Count;
+            int done = 0;
+            foreach (var a in data.Assignments)
+                if (a.IsDone)
+                    done++;
+            return $"Всего: {total} | Выполнено: {done} | Активно: {total - done}";
         }
     }
 }
